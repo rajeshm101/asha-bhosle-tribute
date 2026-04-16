@@ -205,10 +205,15 @@ body {
 .ctrl-mute.muted .icon-sound { display: none; }
 .ctrl-mute.muted .icon-muted { display: block; }
 
-/* Song counter */
-.song-counter {
-  font-size: 0.7rem; letter-spacing: 0.2em; color: var(--gold-dark);
-  text-transform: uppercase;
+/* Overall progress bar (full show) */
+.overall-progress {
+  position: fixed; bottom: 0; left: 0; right: 0; height: 3px; z-index: 188;
+  background: rgba(255,255,255,0.06);
+}
+.overall-progress-fill {
+  height: 100%; width: 0%;
+  background: var(--gold-dark);
+  transition: width 0.8s ease;
 }
 
 /* Song progress bar — prominent */
@@ -472,9 +477,8 @@ body {
 <div class="song-progress"><div class="song-progress-fill" id="songProgressFill"></div></div>
 <div class="countdown" id="countdown">0:20</div>
 
-<!-- Controls (minimal — counter + mute + credit bird) -->
+<!-- Controls (minimal — mute + credit bird) -->
 <div class="controls" id="controls">
-  <div class="song-counter" id="songCounter">1 / 10</div>
   <div class="ctrl-right">
     <button class="ctrl-btn ctrl-mute" id="btnMute" title="Mute (M)">
       <svg class="icon-sound" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
@@ -485,6 +489,9 @@ body {
     </a>
   </div>
 </div>
+
+<!-- Overall show progress -->
+<div class="overall-progress"><div class="overall-progress-fill" id="overallProgressFill"></div></div>
 
 <!-- Finale -->
 <div class="finale" id="finale">
@@ -780,15 +787,14 @@ function resumeShow() {
 }
 
 // ─── SLIDE DISPLAY ───
+const overallFill = document.getElementById('overallProgressFill');
+
 function showSlide(index) {
   document.querySelectorAll('.slide.active').forEach(s => s.classList.remove('active'));
   const el = document.getElementById('slide-' + index);
   if (el) el.classList.add('active');
-  updateCounter(index);
-}
-
-function updateCounter(index) {
-  songCounter.textContent = `${index + 1} / ${songs.length}`;
+  // Update overall progress (fills fully after last song completes)
+  overallFill.style.width = ((index + 1) / songs.length * 100) + '%';
 }
 
 // ─── NAVIGATION ───
@@ -843,7 +849,6 @@ function showMsg(title, sub, dur) {
 // ─── CONTROLS (mute only) ───
 const btnMute = document.getElementById('btnMute');
 const controls = document.getElementById('controls');
-const songCounter = document.getElementById('songCounter');
 const unmutePrompt = document.getElementById('unmutePrompt');
 
 btnMute.addEventListener('click', () => {

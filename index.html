@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Asha Bhosle — A Video Collage Tribute</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Cormorant+Garamond:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --gold: #c9a84c;
+  --gold-light: #e8d48b;
+  --gold-dark: #8a6d1b;
+  --cream: #f5f0e8;
+  --deep: #0a0806;
+}
+
+body {
+  background: #000;
+  color: var(--cream);
+  font-family: 'Cormorant Garamond', serif;
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+}
+
+/* ─── INTRO OVERLAY (replaces curtain, shown briefly) ─── */
+.intro {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  transition: opacity 2s ease;
+  pointer-events: none;
+}
+.intro.gone { opacity: 0; }
+.intro h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(3rem, 9vw, 7.5rem);
+  font-weight: 900;
+  background: linear-gradient(180deg, var(--cream), var(--gold));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  opacity: 0;
+  animation: fadeUp 2s ease 0.3s forwards;
+}
+.intro .sub {
+  font-size: clamp(0.85rem, 1.8vw, 1.2rem);
+  letter-spacing: 0.5em;
+  text-transform: uppercase;
+  color: var(--gold);
+  opacity: 0;
+  animation: fadeUp 1.5s ease 1.2s forwards;
+  margin-top: 1rem;
+}
+.intro .years {
+  font-family: 'Playfair Display', serif;
+  font-size: 1rem;
+  color: rgba(201,168,76,0.35);
+  letter-spacing: 0.3em;
+  opacity: 0;
+  animation: fadeUp 1.5s ease 1.8s forwards;
+  margin-top: 1.2rem;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(25px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ─── STAGE ─── */
+.stage { position: fixed; inset: 0; overflow: hidden; background: #000; }
+
+/* ─── SLIDE ─── */
+.slide {
+  position: absolute; inset: 0;
+  opacity: 0;
+  transition: opacity 1.8s ease;
+  overflow: hidden;
+}
+.slide.active { opacity: 1; z-index: 2; }
+
+.slide-img {
+  position: absolute; inset: -40px;
+  background-size: cover;
+  background-position: center;
+  filter: brightness(0.5) contrast(1.1) saturate(1.1);
+  animation: kenburns 14s ease-in-out infinite alternate;
+}
+@keyframes kenburns {
+  0% { transform: scale(1) translate(0, 0); }
+  100% { transform: scale(1.12) translate(-12px, -8px); }
+}
+.slide:nth-child(even) .slide-img { animation-direction: alternate-reverse; animation-duration: 16s; }
+.slide:nth-child(3n) .slide-img { animation-duration: 12s; }
+
+.slide-overlay {
+  position: absolute; inset: 0;
+  background:
+    linear-gradient(180deg, rgba(0,0,0,0.25) 0%, transparent 25%, transparent 50%, rgba(0,0,0,0.85) 100%),
+    radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.35) 100%);
+  z-index: 1;
+}
+
+/* ─── SLIDE TEXT ─── */
+.slide-text {
+  position: absolute; bottom: 12%; left: 5%; z-index: 3;
+  max-width: 600px;
+  opacity: 0; transform: translateY(30px);
+  transition: opacity 1.2s ease 0.5s, transform 1.2s ease 0.5s;
+}
+.slide.active .slide-text { opacity: 1; transform: translateY(0); }
+
+.slide-text .era {
+  font-size: 0.75rem; letter-spacing: 0.35em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 0.5rem; font-weight: 600;
+}
+.slide-text h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.8rem, 4.5vw, 3.5rem);
+  font-weight: 900; color: #fff; line-height: 1.05;
+  text-shadow: 0 4px 40px rgba(0,0,0,0.7);
+}
+.slide-text .film {
+  font-family: 'Playfair Display', serif; font-style: italic;
+  font-size: clamp(0.95rem, 1.8vw, 1.3rem);
+  color: var(--gold-light); margin-top: 0.35rem;
+}
+.slide-text .desc {
+  font-size: clamp(0.9rem, 1.4vw, 1.1rem);
+  color: rgba(255,255,255,0.55); margin-top: 0.8rem;
+  line-height: 1.7; font-weight: 300; max-width: 480px;
+}
+
+/* ─── NOW PLAYING ─── */
+.now-playing {
+  position: absolute; top: 20px; right: 24px; z-index: 6;
+  display: flex; align-items: center; gap: 10px;
+  opacity: 0; transition: opacity 1s ease 1s;
+}
+.slide.active .now-playing { opacity: 1; }
+
+.eq-bars { display: flex; align-items: flex-end; gap: 2px; height: 18px; }
+.eq-bars span {
+  width: 3px; background: var(--gold); border-radius: 1px;
+  animation: eqBounce 0.8s ease-in-out infinite alternate;
+}
+.eq-bars span:nth-child(1) { height: 6px; animation-delay: 0s; }
+.eq-bars span:nth-child(2) { height: 14px; animation-delay: 0.15s; }
+.eq-bars span:nth-child(3) { height: 8px; animation-delay: 0.3s; }
+.eq-bars span:nth-child(4) { height: 16px; animation-delay: 0.1s; }
+.eq-bars span:nth-child(5) { height: 10px; animation-delay: 0.25s; }
+
+@keyframes eqBounce {
+  0% { transform: scaleY(0.3); }
+  100% { transform: scaleY(1); }
+}
+
+.now-playing-label {
+  font-size: 0.65rem; letter-spacing: 0.25em; text-transform: uppercase;
+  color: var(--gold); text-shadow: 0 1px 10px rgba(0,0,0,0.8);
+}
+
+/* ─── HIDDEN YT PLAYER ─── */
+.yt-audio-players {
+  position: fixed; top: -9999px; left: -9999px;
+  width: 1px; height: 1px; overflow: hidden;
+  pointer-events: none; z-index: -1;
+}
+
+/* ─── CONTROLS BAR (minimal — mute only) ─── */
+.controls {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  z-index: 185; height: 50px;
+  display: flex; align-items: center; justify-content: space-between;
+  background: linear-gradient(180deg, transparent, rgba(0,0,0,0.6) 50%, rgba(0,0,0,0.85));
+  padding: 0 24px;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+.controls.visible { opacity: 1; }
+
+.ctrl-btn {
+  background: none; border: 1.5px solid rgba(255,255,255,0.25);
+  border-radius: 50%; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: border-color 0.2s, background 0.2s, transform 0.15s;
+}
+.ctrl-btn:hover {
+  border-color: var(--gold); background: rgba(201,168,76,0.12);
+  transform: scale(1.1);
+}
+.ctrl-btn:active { transform: scale(0.95); }
+.ctrl-btn svg { fill: rgba(255,255,255,0.8); }
+.ctrl-btn:hover svg { fill: var(--gold-light); }
+
+.ctrl-mute { width: 36px; height: 36px; }
+.ctrl-mute svg { width: 18px; height: 18px; }
+.ctrl-mute .icon-muted { display: none; }
+.ctrl-mute.muted .icon-sound { display: none; }
+.ctrl-mute.muted .icon-muted { display: block; }
+
+/* Song counter */
+.song-counter {
+  font-size: 0.7rem; letter-spacing: 0.2em; color: var(--gold-dark);
+  text-transform: uppercase;
+}
+
+/* Song progress bar — prominent */
+.song-progress {
+  position: fixed; bottom: 50px; left: 0; right: 0; height: 4px; z-index: 186;
+  background: rgba(255,255,255,0.1);
+}
+.song-progress-fill {
+  height: 100%; width: 0%;
+  background: linear-gradient(90deg, var(--gold-dark), var(--gold), var(--gold-light));
+  transition: width 1s linear;
+  box-shadow: 0 0 8px rgba(201,168,76,0.4);
+  position: relative;
+}
+.song-progress-fill::after {
+  content: '';
+  position: absolute; right: -4px; top: -3px;
+  width: 10px; height: 10px;
+  background: var(--gold-light);
+  border-radius: 50%;
+  box-shadow: 0 0 10px rgba(201,168,76,0.6);
+}
+
+/* Countdown timer */
+.countdown {
+  position: fixed; bottom: 58px; right: 24px; z-index: 187;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.75rem; letter-spacing: 0.15em;
+  color: var(--gold-dark); opacity: 0;
+  transition: opacity 0.5s ease;
+}
+.countdown.visible { opacity: 1; }
+
+/* Watch full video link */
+.watch-full {
+  position: absolute; bottom: 10%; right: 5%; z-index: 6;
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 18px;
+  border: 1px solid rgba(201,168,76,0.25);
+  border-radius: 24px;
+  background: rgba(0,0,0,0.3);
+  backdrop-filter: blur(8px);
+  text-decoration: none;
+  opacity: 0;
+  transition: opacity 0.8s ease 1.5s, border-color 0.3s, background 0.3s, transform 0.2s;
+  cursor: pointer;
+}
+.slide.active .watch-full { opacity: 1; }
+.watch-full:hover {
+  border-color: var(--gold);
+  background: rgba(201,168,76,0.1);
+  transform: scale(1.05);
+}
+.watch-full svg {
+  width: 14px; height: 14px; fill: var(--gold);
+}
+.watch-full span {
+  font-size: 0.65rem; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--gold-light);
+}
+
+/* ─── COLLAGE PHASE ─── */
+.collage-phase {
+  position: fixed; inset: 0; z-index: 100;
+  background: #000; display: grid; gap: 3px;
+  opacity: 0; pointer-events: none;
+  transition: opacity 2s ease;
+  grid-template-columns: 1fr 1.4fr 1fr;
+  grid-template-rows: 1fr 1fr;
+}
+.collage-phase.active { opacity: 1; pointer-events: auto; }
+
+.collage-cell {
+  position: relative; overflow: hidden;
+  opacity: 0; transform: scale(1.05);
+  transition: opacity 1s ease, transform 1s ease;
+}
+.collage-cell.show { opacity: 1; transform: scale(1); }
+
+.collage-cell .cell-bg {
+  position: absolute; inset: -20px;
+  background-size: cover; background-position: center;
+  filter: brightness(0.5) saturate(1.1);
+  animation: kenburns-slow 20s ease-in-out infinite alternate;
+}
+@keyframes kenburns-slow { 0% { transform: scale(1); } 100% { transform: scale(1.08); } }
+.collage-cell:nth-child(even) .cell-bg { animation-direction: alternate-reverse; }
+
+.collage-cell .cell-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, transparent 40%, rgba(0,0,0,0.8) 100%);
+  z-index: 1;
+}
+.collage-cell .cell-label {
+  position: absolute; bottom: 10px; left: 12px; z-index: 2;
+  opacity: 0; transform: translateY(10px);
+  transition: opacity 0.6s ease 0.3s, transform 0.6s ease 0.3s;
+}
+.collage-cell.show .cell-label { opacity: 1; transform: translateY(0); }
+.collage-cell .cell-label h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(0.75rem, 1.5vw, 1.2rem);
+  color: #fff; font-weight: 700;
+  text-shadow: 0 2px 15px rgba(0,0,0,0.9);
+}
+.collage-cell .cell-label span {
+  font-size: clamp(0.55rem, 0.8vw, 0.7rem);
+  color: var(--gold); letter-spacing: 0.2em; text-transform: uppercase;
+}
+
+.collage-cell::after {
+  content: ''; position: absolute; inset: 0;
+  border: 1px solid rgba(201,168,76,0.08);
+  z-index: 4; pointer-events: none;
+}
+
+/* ─── CENTER TEXT ─── */
+.center-msg {
+  position: fixed; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 150; text-align: center;
+  pointer-events: none; opacity: 0;
+  transition: opacity 1.5s ease;
+}
+.center-msg.show { opacity: 1; }
+.center-msg h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.5rem, 4vw, 3rem);
+  font-weight: 400; font-style: italic; color: #fff;
+  text-shadow: 0 4px 60px rgba(0,0,0,0.95), 0 0 80px rgba(201,168,76,0.15);
+  line-height: 1.5; white-space: pre-line;
+  max-width: 700px;
+}
+.center-msg p {
+  font-size: clamp(0.8rem, 1.5vw, 1.1rem);
+  color: var(--gold); margin-top: 1.2rem;
+  letter-spacing: 0.25em; font-style: normal;
+  text-shadow: 0 2px 20px rgba(0,0,0,0.9);
+}
+
+/* ─── OVERLAYS ─── */
+.grain {
+  position: fixed; inset: 0; z-index: 180; pointer-events: none; opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation: grainShift 0.3s steps(3) infinite;
+}
+@keyframes grainShift {
+  0% { transform: translate(0,0); } 33% { transform: translate(-2px,1px); }
+  66% { transform: translate(1px,-1px); }
+}
+
+.vignette {
+  position: fixed; inset: 0; z-index: 170; pointer-events: none;
+  background: radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.55) 100%);
+}
+
+.scanlines {
+  position: fixed; inset: 0; z-index: 175; pointer-events: none;
+  background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.02) 2px, rgba(0,0,0,0.02) 4px);
+}
+
+/* ─── FINALE ─── */
+.finale {
+  position: fixed; inset: 0; z-index: 160;
+  background: rgba(0,0,0,0.9);
+  display: flex; align-items: center; justify-content: center; flex-direction: column;
+  opacity: 0; pointer-events: none;
+  transition: opacity 2.5s ease;
+}
+.finale.show { opacity: 1; }
+.finale h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2.5rem, 7vw, 5.5rem); font-weight: 900;
+  background: linear-gradient(180deg, var(--cream), var(--gold));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.finale .stat {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.8rem, 5vw, 3.5rem);
+  color: var(--gold); opacity: 0.45; margin-top: 1.5rem;
+}
+.finale .tagline {
+  font-size: 0.9rem; color: rgba(245,240,232,0.35);
+  letter-spacing: 0.45em; text-transform: uppercase; margin-top: 2rem;
+}
+
+/* ─── SUBTLE CREDIT (twitter bird only, tucked beside mute) ─── */
+.ctrl-right {
+  display: flex; align-items: center; gap: 14px;
+}
+.credit {
+  display: flex; align-items: center; justify-content: center;
+  width: 18px; height: 18px;
+  opacity: 0.35;
+  transition: opacity 0.3s ease, transform 0.25s ease;
+}
+.credit:hover { opacity: 1; transform: scale(1.15); }
+.credit svg {
+  width: 100%; height: 100%;
+  fill: var(--gold);
+}
+
+/* ─── UNMUTE PROMPT ─── */
+.unmute-prompt {
+  position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+  z-index: 195; padding: 10px 24px;
+  background: rgba(0,0,0,0.6); backdrop-filter: blur(10px);
+  border: 1px solid rgba(201,168,76,0.3); border-radius: 30px;
+  cursor: pointer; display: flex; align-items: center; gap: 10px;
+  transition: opacity 0.8s ease, transform 0.3s ease;
+  animation: pulse 2s ease-in-out infinite;
+}
+.unmute-prompt:hover { border-color: var(--gold); transform: translateX(-50%) scale(1.05); }
+.unmute-prompt.gone { opacity: 0; pointer-events: none; }
+.unmute-prompt svg { width: 18px; height: 18px; fill: var(--gold); }
+.unmute-prompt span {
+  font-size: 0.75rem; letter-spacing: 0.25em; text-transform: uppercase;
+  color: var(--gold-light);
+}
+@keyframes pulse {
+  0%,100% { opacity: 0.7; } 50% { opacity: 1; }
+}
+</style>
+</head>
+<body>
+
+<!-- Intro (auto-fades) -->
+<div class="intro" id="intro">
+  <h1>Asha Bhosle</h1>
+  <div class="sub">The Voice of a Billion Dreams</div>
+  <div class="years">1933 &mdash; Eternal</div>
+</div>
+
+<!-- Stage -->
+<div class="stage" id="stage"></div>
+
+<!-- Collage grid -->
+<div class="collage-phase" id="collageGrid"></div>
+
+<!-- Center message -->
+<div class="center-msg" id="centerMsg">
+  <h2 id="cmTitle"></h2>
+  <p id="cmSub"></p>
+</div>
+
+<!-- Overlays -->
+<div class="grain"></div>
+<div class="scanlines"></div>
+<div class="vignette"></div>
+
+<!-- Unmute prompt -->
+<div class="unmute-prompt" id="unmutePrompt" style="opacity:0; pointer-events:none;">
+  <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+  <span>Click to unmute</span>
+</div>
+
+<!-- Hidden YouTube player -->
+<div class="yt-audio-players" id="ytPlayers"></div>
+
+<!-- Song progress -->
+<div class="song-progress"><div class="song-progress-fill" id="songProgressFill"></div></div>
+<div class="countdown" id="countdown">0:20</div>
+
+<!-- Controls (minimal — counter + mute + credit bird) -->
+<div class="controls" id="controls">
+  <div class="song-counter" id="songCounter">1 / 10</div>
+  <div class="ctrl-right">
+    <button class="ctrl-btn ctrl-mute" id="btnMute" title="Mute (M)">
+      <svg class="icon-sound" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+      <svg class="icon-muted" viewBox="0 0 24 24"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>
+    </button>
+    <a class="credit" href="https://twitter.com/rajeshm101" target="_blank" rel="noopener" title="@rajeshm101">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23.643 4.937c-.835.37-1.732.62-2.675.733.962-.576 1.7-1.49 2.048-2.578-.9.534-1.897.922-2.958 1.13-.85-.904-2.06-1.47-3.4-1.47-2.572 0-4.658 2.086-4.658 4.66 0 .364.042.718.12 1.06-3.873-.195-7.304-2.05-9.602-4.868-.4.69-.63 1.49-.63 2.342 0 1.616.823 3.043 2.072 3.878-.764-.025-1.482-.234-2.11-.583v.06c0 2.257 1.605 4.14 3.737 4.568-.39.106-.803.162-1.227.162-.3 0-.593-.028-.877-.082.593 1.85 2.313 3.198 4.352 3.234-1.595 1.25-3.604 1.995-5.786 1.995-.376 0-.747-.022-1.112-.065 2.062 1.323 4.51 2.093 7.14 2.093 8.57 0 13.255-7.098 13.255-13.254 0-.2-.005-.402-.014-.602.91-.658 1.7-1.477 2.323-2.41z"/></svg>
+    </a>
+  </div>
+</div>
+
+<!-- Finale -->
+<div class="finale" id="finale">
+  <h2>The Song Never Ends</h2>
+  <div class="stat">12,000+ Songs</div>
+  <div class="tagline">Asha Bhosle &middot; Forever in Melody</div>
+</div>
+
+<!-- YouTube IFrame API -->
+<script src="https://www.youtube.com/iframe_api"></script>
+<script>
+// ─── SONG DATA (10 songs) ───
+const songs = [
+  {
+    title: 'Dum Maro Dum', film: 'Hare Rama Hare Krishna',
+    era: '1971 \u00B7 The Iconic Rebel',
+    desc: 'A smoky, hypnotic anthem that shattered convention and defined a restless generation.',
+    yt: 'GUn3P5QyLRY', start: 38
+  },
+  {
+    title: 'Aaiye Meherbaan', film: 'Howrah Bridge',
+    era: '1958 \u00B7 Where It All Began',
+    desc: 'The song that announced Asha to the world \u2014 sultry elegance that made Madhubala unforgettable.',
+    yt: 'go4ixEgnecg', start: 28
+  },
+  {
+    title: 'Chura Liya Hai Tumne', film: 'Yaadon Ki Baaraat',
+    era: '1973 \u00B7 Romance Immortalized',
+    desc: 'Pure, luminous romance \u2014 a melody so tender it seems to suspend time itself.',
+    yt: 'dkqU7aq82XQ', start: 55
+  },
+  {
+    title: 'Piya Tu Ab To Aaja', film: 'Caravan',
+    era: '1971 \u00B7 Cabaret Royalty',
+    desc: 'Her voice drips with yearning and defiance \u2014 a masterclass no one has matched.',
+    yt: '46GGxF_Bwhg', start: 35
+  },
+  {
+    title: 'Raat Akeli Hai', film: 'Jewel Thief',
+    era: '1967 \u00B7 Nocturnal Seduction',
+    desc: 'Moonlit longing set to music. Every whispered note draws you deeper into the night.',
+    yt: 'Su4vvd2thG8', start: 42
+  },
+  {
+    title: 'Yeh Mera Dil', film: 'Don',
+    era: '1978 \u00B7 Disco Inferno',
+    desc: 'Helen dances, Asha ignites \u2014 the most electrifying voice-and-moves pairing in Bollywood history.',
+    yt: 'lUFitnpPihs', start: 28
+  },
+  {
+    title: 'In Ankhon Ki Masti', film: 'Umrao Jaan',
+    era: '1981 \u00B7 Ghazal Perfection',
+    desc: 'Every note carries the weight of unspoken longing \u2014 poetry transcending language.',
+    yt: 'yjYE41bYnUM', start: 68
+  },
+  {
+    title: 'O Mere Sona Re', film: 'Teesri Manzil',
+    era: '1966 \u00B7 Joyous Abandon',
+    desc: 'Asha and Rafi in perfect duet \u2014 the sound of unapologetic, breathless joy.',
+    yt: 'aMUWjtHLTAw', start: 32
+  },
+  {
+    title: 'Mera Kuch Samaan', film: 'Ijaazat',
+    era: '1987 \u00B7 Poetry in Song',
+    desc: 'Gulzar\u2019s words, R.D. Burman\u2019s spare arrangement, Asha stripped bare. A farewell that still draws tears.',
+    yt: '6i9YxZKnQeY', start: 45
+  },
+  {
+    title: 'Tanha Tanha', film: 'Rangeela',
+    era: '1995 \u00B7 Rahman\u2019s Muse',
+    desc: 'A.R. Rahman asked for something entirely new. Asha delivered a sound no one had ever heard from her before.',
+    yt: 'W1GNGlaFKYw', start: 38
+  },
+];
+
+const SONG_DURATION = 20; // seconds per song
+
+function thumb(ytId) {
+  return `https://img.youtube.com/vi/${ytId}/maxresdefault.jpg`;
+}
+
+const eqBarsHTML = `<div class="eq-bars"><span></span><span></span><span></span><span></span><span></span></div>`;
+const ytLinkSVG = `<svg viewBox="0 0 24 24"><path d="M21 3H3c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-9 9.5L3 8V6l9 4.5L21 6v2l-9 4.5z"/></svg>`;
+const playIconSVG = `<svg viewBox="0 0 24 24"><polygon points="9.5,7.5 16.5,12 9.5,16.5"/></svg>`;
+
+// ─── BUILD SLIDES ───
+const stage = document.getElementById('stage');
+songs.forEach((s, i) => {
+  const slide = document.createElement('div');
+  slide.className = 'slide';
+  slide.id = 'slide-' + i;
+  const ytLink = `https://www.youtube.com/watch?v=${s.yt}`;
+  slide.innerHTML = `
+    <div class="slide-img" style="background-image:url('${thumb(s.yt)}')"></div>
+    <div class="slide-overlay"></div>
+    <div class="now-playing">
+      <div class="now-playing-label">Now Playing</div>
+      ${eqBarsHTML}
+    </div>
+    <a class="watch-full" href="${ytLink}" target="_blank" rel="noopener">
+      ${playIconSVG}
+      <span>Watch Full Song</span>
+    </a>
+    <div class="slide-text">
+      <div class="era">${s.era}</div>
+      <h2>${s.title}</h2>
+      <div class="film">${s.film}</div>
+      <p class="desc">${s.desc}</p>
+    </div>
+  `;
+  stage.appendChild(slide);
+});
+
+// ─── BUILD COLLAGE (uses first 6 songs) ───
+const collageGrid = document.getElementById('collageGrid');
+songs.slice(0, 6).forEach((s, i) => {
+  const cell = document.createElement('div');
+  cell.className = 'collage-cell';
+  cell.innerHTML = `
+    <div class="cell-bg" style="background-image:url('${thumb(s.yt)}')"></div>
+    <div class="cell-overlay"></div>
+    <div class="cell-label"><h3>${s.title}</h3><span>${s.era}</span></div>
+  `;
+  collageGrid.appendChild(cell);
+});
+
+// ─── YOUTUBE PLAYER ───
+let player = null;
+let playerReady = false;
+let isMuted = true; // start muted (autoplay policy)
+let isPaused = false;
+let currentIndex = 0;
+let songTimer = null;
+let songElapsed = 0;
+let progressInterval = null;
+
+function onYouTubeIframeAPIReady() {
+  window.ytAPIReady = true;
+  // Auto-start: create player immediately (muted for autoplay compliance)
+  initPlayer(0);
+}
+
+// Fade audio in over ~2.5 seconds
+function fadeInAudio(targetVol) {
+  if (!player || isMuted) return;
+  player.setVolume(0);
+  player.unMute();
+  let vol = 0;
+  const steps = 12;
+  const stepTime = 2500 / steps;
+  const increment = targetVol / steps;
+  const fadeIn = setInterval(() => {
+    vol += increment;
+    if (vol >= targetVol) {
+      vol = targetVol;
+      clearInterval(fadeIn);
+    }
+    try { player.setVolume(Math.round(vol)); } catch(e) {}
+  }, stepTime);
+}
+
+function initPlayer(index) {
+  const s = songs[index];
+  const container = document.getElementById('ytPlayers');
+  container.innerHTML = '<div id="yt-single-player"></div>';
+  playerReady = false;
+
+  player = new YT.Player('yt-single-player', {
+    height: '1', width: '1',
+    videoId: s.yt,
+    playerVars: {
+      autoplay: 1, controls: 0, start: s.start,
+      playsinline: 1, disablekb: 1, fs: 0,
+      modestbranding: 1, rel: 0, origin: window.location.origin,
+    },
+    events: {
+      onReady: function(e) {
+        playerReady = true;
+        e.target.setVolume(0); // start silent
+        if (isMuted) { e.target.mute(); }
+        e.target.playVideo();
+        fadeInAudio(85); // fade in
+        currentIndex = index;
+        startSongTimer();
+      },
+      onError: function(e) {
+        console.log('[Tribute] Error:', e.data, '- skipping to next');
+        goNext();
+      }
+    }
+  });
+}
+
+function switchSong(index) {
+  if (index < 0 || index >= songs.length) return;
+  const s = songs[index];
+  currentIndex = index;
+  clearSongTimer();
+
+  if (player && playerReady && player.loadVideoById) {
+    player.setVolume(0); // start silent
+    player.loadVideoById({ videoId: s.yt, startSeconds: s.start });
+    if (isMuted) { player.mute(); }
+    fadeInAudio(85); // fade in
+    startSongTimer();
+  } else {
+    initPlayer(index);
+  }
+}
+
+// ─── SONG TIMER (auto-advance after SONG_DURATION seconds) ───
+const songProgressFill = document.getElementById('songProgressFill');
+
+const countdownEl = document.getElementById('countdown');
+
+function updateCountdown() {
+  const remaining = Math.max(0, SONG_DURATION - songElapsed);
+  const mins = Math.floor(remaining / 60);
+  const secs = remaining % 60;
+  countdownEl.textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+}
+
+function startSongTimer() {
+  clearSongTimer();
+  songElapsed = 0;
+  songProgressFill.style.transition = 'none';
+  songProgressFill.style.width = '0%';
+  updateCountdown();
+  countdownEl.classList.add('visible');
+
+  // Force reflow then animate
+  requestAnimationFrame(() => {
+    songProgressFill.style.transition = `width ${SONG_DURATION}s linear`;
+    songProgressFill.style.width = '100%';
+  });
+
+  songTimer = setTimeout(() => {
+    if (currentIndex < songs.length - 1) {
+      goNext();
+    } else {
+      showFinale();
+    }
+  }, SONG_DURATION * 1000);
+
+  // Track elapsed for pause/resume + countdown
+  progressInterval = setInterval(() => {
+    songElapsed++;
+    updateCountdown();
+  }, 1000);
+}
+
+function clearSongTimer() {
+  clearTimeout(songTimer);
+  clearInterval(progressInterval);
+  songTimer = null;
+  progressInterval = null;
+}
+
+function pauseShow() {
+  isPaused = true;
+  clearSongTimer();
+  if (player && playerReady) player.pauseVideo();
+  songProgressFill.style.transition = 'none';
+  const pct = (songElapsed / SONG_DURATION) * 100;
+  songProgressFill.style.width = pct + '%';
+  btnPlay.classList.add('paused');
+}
+
+function resumeShow() {
+  isPaused = false;
+  if (player && playerReady) player.playVideo();
+  const remaining = SONG_DURATION - songElapsed;
+  songProgressFill.style.transition = `width ${remaining}s linear`;
+  songProgressFill.style.width = '100%';
+
+  songTimer = setTimeout(() => {
+    if (currentIndex < songs.length - 1) {
+      goNext();
+    } else {
+      showFinale();
+    }
+  }, remaining * 1000);
+
+  progressInterval = setInterval(() => {
+    songElapsed++;
+    updateCountdown();
+  }, 1000);
+  btnPlay.classList.remove('paused');
+}
+
+// ─── SLIDE DISPLAY ───
+function showSlide(index) {
+  document.querySelectorAll('.slide.active').forEach(s => s.classList.remove('active'));
+  const el = document.getElementById('slide-' + index);
+  if (el) el.classList.add('active');
+  updateCounter(index);
+}
+
+function updateCounter(index) {
+  songCounter.textContent = `${index + 1} / ${songs.length}`;
+}
+
+// ─── NAVIGATION ───
+function goNext() {
+  if (currentIndex >= songs.length - 1) { showFinale(); return; }
+  const next = currentIndex + 1;
+  showSlide(next);
+  switchSong(next);
+}
+
+function goPrev() {
+  if (currentIndex <= 0) return;
+  const prev = currentIndex - 1;
+  showSlide(prev);
+  switchSong(prev);
+}
+
+// ─── COLLAGE ───
+function flashCollage(duration) {
+  collageGrid.classList.add('active');
+  const cells = collageGrid.querySelectorAll('.collage-cell');
+  cells.forEach((c, i) => setTimeout(() => c.classList.add('show'), i * 150));
+  setTimeout(() => {
+    collageGrid.classList.remove('active');
+    cells.forEach(c => c.classList.remove('show'));
+  }, duration);
+}
+
+// ─── FINALE ───
+function showFinale() {
+  clearSongTimer();
+  // Fade audio
+  if (player && playerReady) {
+    let vol = 85, fade = setInterval(() => {
+      vol -= 6;
+      if (vol <= 0) { clearInterval(fade); player.pauseVideo(); }
+      else { try { player.setVolume(vol); } catch(e){} }
+    }, 200);
+  }
+  document.getElementById('finale').classList.add('show');
+}
+
+// ─── CENTER MESSAGES (timed with song changes) ───
+function showMsg(title, sub, dur) {
+  const cm = document.getElementById('centerMsg');
+  document.getElementById('cmTitle').textContent = title;
+  document.getElementById('cmSub').textContent = sub || '';
+  cm.classList.add('show');
+  if (dur) setTimeout(() => cm.classList.remove('show'), dur);
+}
+
+// ─── CONTROLS (mute only) ───
+const btnMute = document.getElementById('btnMute');
+const controls = document.getElementById('controls');
+const songCounter = document.getElementById('songCounter');
+const unmutePrompt = document.getElementById('unmutePrompt');
+
+btnMute.addEventListener('click', () => {
+  isMuted = !isMuted;
+  btnMute.classList.toggle('muted', isMuted);
+  if (player && playerReady) {
+    if (isMuted) { player.mute(); } else { player.unMute(); player.setVolume(85); }
+  }
+});
+
+// Unmute prompt click
+unmutePrompt.addEventListener('click', () => {
+  isMuted = false;
+  btnMute.classList.remove('muted');
+  if (player && playerReady) { player.unMute(); player.setVolume(85); }
+  unmutePrompt.classList.add('gone');
+});
+
+// Also unmute on any body click/keypress (first interaction)
+let userInteracted = false;
+function onFirstInteraction() {
+  if (userInteracted) return;
+  userInteracted = true;
+  isMuted = false;
+  btnMute.classList.remove('muted');
+  if (player && playerReady) { player.unMute(); player.setVolume(85); }
+  unmutePrompt.classList.add('gone');
+}
+document.addEventListener('click', onFirstInteraction, { once: false });
+document.addEventListener('keydown', onFirstInteraction, { once: false });
+
+// Keyboard: only mute toggle
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'm' || e.key === 'M') btnMute.click();
+});
+
+// ─── AUTO-START SEQUENCE ───
+// Show intro for 3.5s, then fade and start first song
+setTimeout(() => {
+  document.getElementById('intro').classList.add('gone');
+  showSlide(0);
+  controls.classList.add('visible');
+  // Show unmute prompt after intro fades
+  setTimeout(() => {
+    if (isMuted) {
+      unmutePrompt.style.opacity = '1';
+      unmutePrompt.style.pointerEvents = 'auto';
+    }
+  }, 1500);
+}, 3500);
+
+// ─── TRIBUTE QUOTES & MESSAGES ───
+// Each song gets a quote that appears ~25 seconds in
+// All Asha quotes verified via BrainyQuote, Indian Express (2023),
+// Free Press Journal, and ANI News tributes.
+const tributeMessages = [
+  // Song 0: Dum Maro Dum
+  // Source: BrainyQuote (brainyquote.com/quotes/asha_bhosle_1019861)
+  {
+    quote: '"With singing, you get lost in the music \u2014\nI go into another world when I\u2019m singing."',
+    attr: '\u2014 Asha Bhosle',
+    delay: 5000, duration: 9000
+  },
+  // Song 1: Aaiye Meherbaan (factual narration, not a quote)
+  {
+    quote: 'She started learning classical music at three.\nPlayback singing at ten.\nBy twenty-five, a voice the nation knew by heart.',
+    attr: '',
+    delay: 4000, duration: 9000
+  },
+  // Song 2: Chura Liya
+  // Source: Indian Express interview, 2023 (via rahulgaitonde.org)
+  {
+    quote: '"I no longer just sing a tune.\nI feel the notes surging through my veins.\nIt\u2019s almost like I see the music."',
+    attr: '\u2014 Asha Bhosle',
+    delay: 5000, duration: 9000
+  },
+  // Song 3: Piya Tu Ab To Aaja
+  // Source: BrainyQuote / quote.org (quote.org/quote/music-has-given-me-great-solace-in-943825)
+  {
+    quote: '"Music has given me great solace\nin my times of hardship.\nI owe everything to music."',
+    attr: '\u2014 Asha Bhosle',
+    delay: 5000, duration: 9000
+  },
+  // Song 4: Raat Akeli Hai
+  // Source: BrainyQuote (brainyquote.com/authors/asha-bhosle-quotes)
+  {
+    quote: '"I have sung in over 20 different languages\nand enjoyed it.\nI have even sung in Spanish and Russian."',
+    attr: '\u2014 Asha Bhosle',
+    delay: 5000, duration: 9000
+  },
+  // Song 5: Yeh Mera Dil (+ collage)
+  // R.D. Burman composed his most daring melodies for Asha — factual narration
+  {
+    quote: 'R.D. Burman composed his most daring melodies\nbecause he knew Asha could sing them.\nTogether, they rewrote\nthe rules of film music.',
+    attr: '',
+    delay: 4000, duration: 9000,
+    collage: true
+  },
+  // Song 6: In Ankhon Ki Masti
+  // Source: BrainyQuote (brainyquote.com/authors/asha-bhosle-quotes)
+  {
+    quote: '"There has been great tragedy\nbut also moments of great happiness.\nI\u2019ve taken both in my stride,\nand if I were to replay my life,\nI would do it all over again."',
+    attr: '\u2014 Asha Bhosle',
+    delay: 4000, duration: 10000
+  },
+  // Song 7: O Mere Sona Re
+  // Source: BrainyQuote (verified Asha Bhosle quote)
+  {
+    quote: '"I have no regrets \u2014\nbut yes, I have been\ndeeply hurt many times.\nI prefer to find some way to solve it,\nand then move on."',
+    attr: '\u2014 Asha Bhosle',
+    delay: 5000, duration: 9000
+  },
+  // Song 8: Mera Kuch Samaan
+  // Source: Free Press Journal / Daily Sun / MSN (Couple of Things podcast)
+  {
+    quote: '"My only wish now is to die\nwhile I\u2019m still singing.\nGaana meri life hai.\nI can\u2019t live without singing."',
+    attr: '\u2014 Asha Bhosle',
+    delay: 4000, duration: 10000
+  },
+  // Song 9: Tanha Tanha (finale — factual closing tribute)
+  {
+    quote: '12,000 songs. 20 languages.\n8 decades of playback singing.\nOne extraordinary voice.\nForever.',
+    attr: '',
+    delay: 4000, duration: 10000
+  },
+];
+
+// Timers for tribute messages
+let tributeTimer = null;
+
+function scheduleTributeMsg(index) {
+  clearTimeout(tributeTimer);
+  const msg = tributeMessages[index];
+  if (!msg) return; // null = let the song play without overlay
+
+  tributeTimer = setTimeout(() => {
+    showMsg(msg.quote, msg.attr, msg.duration);
+
+    if (msg.collage) {
+      flashCollage(8000);
+    }
+  }, msg.delay);
+}
+
+// Hook into slide changes to trigger tribute messages
+const origShowSlide = showSlide;
+showSlide = function(index) {
+  origShowSlide(index);
+  scheduleTributeMsg(index);
+};
+</script>
+</body>
+</html>

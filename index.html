@@ -436,6 +436,29 @@ body {
 @keyframes pulse {
   0%,100% { opacity: 0.7; } 50% { opacity: 1; }
 }
+
+/* ─── MOBILE OVERRIDES (must be last for cascade) ─── */
+@media (max-width: 600px) {
+  .unmute-prompt, .unmute-prompt:hover {
+    left: 14px; right: auto;
+    transform: none;
+    padding: 5px 12px; gap: 6px;
+  }
+  .unmute-prompt svg { width: 12px; height: 12px; }
+  .unmute-prompt span { font-size: 0.5rem; letter-spacing: 0.12em; }
+
+  .watch-full {
+    top: 48px; right: 14px; bottom: auto; left: auto;
+    padding: 5px 12px;
+  }
+  .watch-full span { font-size: 0.5rem; }
+  .watch-full svg { width: 10px; height: 10px; }
+
+  .intro { text-align: center; padding: 0 20px; }
+  .finale { text-align: center; padding: 0 20px; }
+
+  .slide-img { background-position: 30% center; }
+}
 </style>
 </head>
 <body>

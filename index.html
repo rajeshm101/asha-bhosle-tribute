@@ -411,6 +411,32 @@ body {
   fill: var(--gold);
 }
 
+/* ─── MOBILE OVERRIDES ─── */
+@media (max-width: 600px) {
+  .unmute-prompt {
+    top: 10px; padding: 5px 14px; gap: 6px;
+  }
+  .unmute-prompt svg { width: 12px; height: 12px; }
+  .unmute-prompt span { font-size: 0.55rem; letter-spacing: 0.15em; }
+
+  .slide-text {
+    left: 0; right: 0; bottom: 14%; text-align: center;
+    padding: 0 16px; max-width: 100%;
+  }
+  .slide-text .desc { max-width: 100%; margin-left: auto; margin-right: auto; }
+
+  .watch-full { right: 50%; transform: translateX(50%); bottom: 7%; }
+  .slide.active .watch-full { opacity: 1; }
+
+  .center-msg { padding: 0 20px; width: 100%; }
+  .center-msg h2 { font-size: clamp(1.1rem, 5vw, 1.8rem); }
+
+  .song-counter { font-size: 0.85rem; letter-spacing: 0.25em; color: var(--gold); }
+
+  .now-playing { top: 10px; right: 14px; }
+  .now-playing-label { font-size: 0.55rem; }
+}
+
 /* ─── UNMUTE PROMPT ─── */
 .unmute-prompt {
   position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
@@ -712,13 +738,17 @@ function startSongTimer() {
   songElapsed = 0;
   songProgressFill.style.transition = 'none';
   songProgressFill.style.width = '0%';
+  // Force reflow (needed on mobile)
+  songProgressFill.offsetWidth;
   updateCountdown();
   countdownEl.classList.add('visible');
 
-  // Force reflow then animate
+  // Double rAF for reliable reflow on all browsers
   requestAnimationFrame(() => {
-    songProgressFill.style.transition = `width ${SONG_DURATION}s linear`;
-    songProgressFill.style.width = '100%';
+    requestAnimationFrame(() => {
+      songProgressFill.style.transition = `width ${SONG_DURATION}s linear`;
+      songProgressFill.style.width = '100%';
+    });
   });
 
   songTimer = setTimeout(() => {

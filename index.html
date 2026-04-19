@@ -804,6 +804,8 @@ function updateCounter(index) {
 const overallFill = document.getElementById('overallProgressFill');
 
 function showSlide(index) {
+  dismissCollage(); // clear any active collage overlay
+  document.getElementById('centerMsg').classList.remove('show'); // clear quote overlay
   document.querySelectorAll('.slide.active').forEach(s => s.classList.remove('active'));
   const el = document.getElementById('slide-' + index);
   if (el) el.classList.add('active');
@@ -820,14 +822,18 @@ function goNext() {
 }
 
 // ─── COLLAGE ───
+let collageTimer = null;
 function flashCollage(duration) {
   collageGrid.classList.add('active');
   const cells = collageGrid.querySelectorAll('.collage-cell');
   cells.forEach((c, i) => setTimeout(() => c.classList.add('show'), i * 150));
-  setTimeout(() => {
-    collageGrid.classList.remove('active');
-    cells.forEach(c => c.classList.remove('show'));
-  }, duration);
+  clearTimeout(collageTimer);
+  collageTimer = setTimeout(() => { dismissCollage(); }, duration);
+}
+function dismissCollage() {
+  clearTimeout(collageTimer);
+  collageGrid.classList.remove('active');
+  collageGrid.querySelectorAll('.collage-cell').forEach(c => c.classList.remove('show'));
 }
 
 // ─── FINALE ───

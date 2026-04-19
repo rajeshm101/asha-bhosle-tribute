@@ -503,6 +503,9 @@ body {
 </div>
 
 
+<!-- Hidden YouTube player -->
+<div class="yt-audio-players" id="ytPlayers"></div>
+
 <!-- Song progress -->
 <div class="song-progress"><div class="song-progress-fill" id="songProgressFill"></div></div>
 <div class="countdown" id="countdown">0:22</div>
@@ -540,83 +543,74 @@ body {
   <div class="tagline">Asha Bhosle &middot; Forever in Melody</div>
 </div>
 
+<!-- YouTube IFrame API -->
+<script src="https://www.youtube.com/iframe_api"></script>
 <script>
 // ─── SONG DATA (10 songs) ───
-// Thumbnails from YouTube, audio from Spotify 30-second previews (ad-free)
 const songs = [
   {
     title: 'Dum Maro Dum', film: 'Hare Rama Hare Krishna',
     era: '1971 \u00B7 The Iconic Rebel',
     desc: 'A smoky, hypnotic anthem that shattered convention and defined a restless generation.',
-    yt: 'GUn3P5QyLRY',
-    audio: 'https://p.scdn.co/mp3-preview/65b46bfdd6dc6b359d2234b6a2d821e86696a1ba'
+    yt: 'GUn3P5QyLRY', start: 38
   },
   {
     title: 'Aaiye Meherbaan', film: 'Howrah Bridge',
     era: '1958 \u00B7 Where It All Began',
     desc: 'The song that announced Asha to the world \u2014 sultry elegance that made Madhubala unforgettable.',
-    yt: 'go4ixEgnecg',
-    audio: 'https://p.scdn.co/mp3-preview/2611dfe3b09998270681bc73e16380d358989859'
+    yt: 'go4ixEgnecg', start: 28
   },
   {
     title: 'Chura Liya Hai Tumne', film: 'Yaadon Ki Baaraat',
     era: '1973 \u00B7 Romance Immortalized',
     desc: 'Pure, luminous romance \u2014 a melody so tender it seems to suspend time itself.',
-    yt: 'dkqU7aq82XQ',
-    audio: 'https://p.scdn.co/mp3-preview/848d5fa0e393cae43b7be3e413c80808705f3075'
+    yt: 'dkqU7aq82XQ', start: 55
   },
   {
     title: 'Piya Tu Ab To Aaja', film: 'Caravan',
     era: '1971 \u00B7 Cabaret Royalty',
     desc: 'Her voice drips with yearning and defiance \u2014 a masterclass no one has matched.',
-    yt: '46GGxF_Bwhg',
-    audio: 'https://p.scdn.co/mp3-preview/acae444ed81058244e8299f48bec1c13cc03fd79'
+    yt: '46GGxF_Bwhg', start: 35
   },
   {
     title: 'Raat Akeli Hai', film: 'Jewel Thief',
     era: '1967 \u00B7 Nocturnal Seduction',
     desc: 'Moonlit longing set to music. Every whispered note draws you deeper into the night.',
-    yt: 'Su4vvd2thG8',
-    audio: 'https://p.scdn.co/mp3-preview/e784f012fa1d238dedce8b907d6085b1075360b8'
+    yt: 'Su4vvd2thG8', start: 42
   },
   {
     title: 'Yeh Mera Dil', film: 'Don',
     era: '1978 \u00B7 Disco Inferno',
     desc: 'Helen dances, Asha ignites \u2014 the most electrifying voice-and-moves pairing in Bollywood history.',
-    yt: 'lUFitnpPihs',
-    audio: 'https://p.scdn.co/mp3-preview/698f1242d46d421a65f274943a9d2f198b3a71e8'
+    yt: 'lUFitnpPihs', start: 28
   },
   {
     title: 'In Ankhon Ki Masti', film: 'Umrao Jaan',
     era: '1981 \u00B7 Ghazal Perfection',
     desc: 'Every note carries the weight of unspoken longing \u2014 poetry transcending language.',
-    yt: 'yjYE41bYnUM',
-    audio: 'https://p.scdn.co/mp3-preview/5192b5fa33600a265ba4aace9dcedc715a3335b9'
+    yt: 'yjYE41bYnUM', start: 68
   },
   {
     title: 'O Mere Sona Re', film: 'Teesri Manzil',
     era: '1966 \u00B7 Joyous Abandon',
     desc: 'Asha and Rafi in perfect duet \u2014 the sound of unapologetic, breathless joy.',
-    yt: 'aMUWjtHLTAw',
-    audio: 'https://p.scdn.co/mp3-preview/9696b76fd0bfb01d822323b0ff5a3cad9e467be0'
+    yt: 'aMUWjtHLTAw', start: 32
   },
   {
     title: 'Mera Kuch Samaan', film: 'Ijaazat',
     era: '1987 \u00B7 Poetry in Song',
     desc: 'Gulzar\u2019s words, R.D. Burman\u2019s spare arrangement, Asha stripped bare. A farewell that still draws tears.',
-    yt: '6i9YxZKnQeY',
-    audio: 'https://p.scdn.co/mp3-preview/9f27d69c5d562efef63807136437c1b5ca030242'
+    yt: '6i9YxZKnQeY', start: 45
   },
   {
     title: 'Tanha Tanha', film: 'Rangeela',
     era: '1995 \u00B7 Rahman\u2019s Muse',
     desc: 'A.R. Rahman asked for something entirely new. Asha delivered a sound no one had ever heard from her before.',
-    yt: 'W1GNGlaFKYw',
-    audio: 'https://p.scdn.co/mp3-preview/fd22baf701670ee9eac5ac4f505a7c8d5c611ae1'
+    yt: 'W1GNGlaFKYw', start: 38
   },
 ];
 
-const SONG_DURATION = 22; // seconds per song (matches Spotify 30s preview length)
+const SONG_DURATION = 22; // seconds per song
 
 function thumb(ytId) {
   return `https://img.youtube.com/vi/${ytId}/maxresdefault.jpg`;
@@ -667,51 +661,70 @@ songs.slice(0, 6).forEach((s, i) => {
   collageGrid.appendChild(cell);
 });
 
-// ─── AUDIO PLAYER (HTML5 Audio with Spotify previews) ───
-let player = null; // HTML5 Audio element
+// ─── YOUTUBE PLAYER ───
+let player = null;
+let playerReady = false;
 let isMuted = true; // start muted (autoplay policy)
 let isPaused = false;
 let currentIndex = 0;
 let songTimer = null;
 let songElapsed = 0;
 let progressInterval = null;
-let fadeInterval = null;
+
+function onYouTubeIframeAPIReady() {
+  window.ytAPIReady = true;
+}
 
 // Fade audio in over ~2.5 seconds
 function fadeInAudio(targetVol) {
   if (!player || isMuted) return;
-  clearInterval(fadeInterval);
-  player.volume = 0;
-  player.muted = false;
+  player.setVolume(0);
+  player.unMute();
   let vol = 0;
   const steps = 12;
   const stepTime = 2500 / steps;
   const increment = targetVol / steps;
-  fadeInterval = setInterval(() => {
+  const fadeIn = setInterval(() => {
     vol += increment;
     if (vol >= targetVol) {
       vol = targetVol;
-      clearInterval(fadeInterval);
+      clearInterval(fadeIn);
     }
-    try { player.volume = Math.min(1, vol); } catch(e) {}
+    try { player.setVolume(Math.round(vol)); } catch(e) {}
   }, stepTime);
 }
 
-// Fade audio out, then call callback
-function fadeOutAudio(callback) {
-  if (!player) { if (callback) callback(); return; }
-  clearInterval(fadeInterval);
-  let vol = player.volume;
-  fadeInterval = setInterval(() => {
-    vol -= 0.08;
-    if (vol <= 0) {
-      vol = 0;
-      clearInterval(fadeInterval);
-      player.pause();
-      if (callback) callback();
+function initPlayer(index) {
+  const s = songs[index];
+  const container = document.getElementById('ytPlayers');
+  if (!container) return;
+  container.innerHTML = '<div id="yt-single-player"></div>';
+  playerReady = false;
+
+  player = new YT.Player('yt-single-player', {
+    height: '1', width: '1',
+    videoId: s.yt,
+    playerVars: {
+      autoplay: 1, controls: 0, start: s.start,
+      playsinline: 1, disablekb: 1, fs: 0,
+      modestbranding: 1, rel: 0, origin: window.location.origin,
+    },
+    events: {
+      onReady: function(e) {
+        playerReady = true;
+        e.target.setVolume(0);
+        if (isMuted) { e.target.mute(); }
+        e.target.playVideo();
+        fadeInAudio(85);
+        currentIndex = index;
+        startSongTimer();
+      },
+      onError: function(e) {
+        console.log('[Tribute] Error:', e.data, '- skipping to next');
+        goNext();
+      }
     }
-    try { player.volume = Math.max(0, vol); } catch(e) {}
-  }, 100);
+  });
 }
 
 function playSong(index) {
@@ -720,34 +733,15 @@ function playSong(index) {
   currentIndex = index;
   clearSongTimer();
 
-  // Stop previous
-  if (player) { player.pause(); }
-
-  // Create new audio element
-  player = new Audio(s.audio);
-  player.crossOrigin = 'anonymous';
-  player.volume = 0;
-  player.muted = isMuted;
-
-  player.addEventListener('canplaythrough', function onReady() {
-    player.removeEventListener('canplaythrough', onReady);
-    player.play().then(() => {
-      fadeInAudio(0.85); // fade in (0-1 scale for HTML5 Audio)
-      startSongTimer();
-    }).catch(err => {
-      console.log('[Tribute] Playback blocked, starting muted');
-      player.muted = true;
-      player.play();
-      startSongTimer();
-    });
-  }, { once: true });
-
-  player.addEventListener('error', () => {
-    console.log('[Tribute] Audio error - skipping to next');
-    goNext();
-  });
-
-  player.load();
+  if (player && playerReady && player.loadVideoById) {
+    player.setVolume(0);
+    player.loadVideoById({ videoId: s.yt, startSeconds: s.start });
+    if (isMuted) { player.mute(); }
+    fadeInAudio(85);
+    startSongTimer();
+  } else {
+    initPlayer(index);
+  }
 }
 
 // ─── SONG TIMER (auto-advance after SONG_DURATION seconds) ───
@@ -839,7 +833,13 @@ function flashCollage(duration) {
 // ─── FINALE ───
 function showFinale() {
   clearSongTimer();
-  fadeOutAudio();
+  if (player && playerReady) {
+    let vol = 85, fade = setInterval(() => {
+      vol -= 6;
+      if (vol <= 0) { clearInterval(fade); player.pauseVideo(); }
+      else { try { player.setVolume(vol); } catch(e){} }
+    }, 200);
+  }
   document.getElementById('finale').classList.add('show');
 }
 
@@ -860,9 +860,8 @@ const unmutePrompt = document.getElementById('unmutePrompt');
 btnMute.addEventListener('click', () => {
   isMuted = !isMuted;
   btnMute.classList.toggle('muted', isMuted);
-  if (player) {
-    player.muted = isMuted;
-    if (!isMuted) player.volume = 0.85;
+  if (player && playerReady) {
+    if (isMuted) { player.mute(); } else { player.unMute(); player.setVolume(85); }
   }
 });
 
@@ -870,7 +869,7 @@ btnMute.addEventListener('click', () => {
 unmutePrompt.addEventListener('click', () => {
   isMuted = false;
   btnMute.classList.remove('muted');
-  if (player) { player.muted = false; player.volume = 0.85; }
+  if (player && playerReady) { player.unMute(); player.setVolume(85); }
   unmutePrompt.classList.add('gone');
 });
 
@@ -881,7 +880,7 @@ function onFirstInteraction() {
   userInteracted = true;
   isMuted = false;
   btnMute.classList.remove('muted');
-  if (player) { player.muted = false; player.volume = 0.85; }
+  if (player && playerReady) { player.unMute(); player.setVolume(85); }
   unmutePrompt.classList.add('gone');
 }
 document.addEventListener('click', onFirstInteraction, { once: false });

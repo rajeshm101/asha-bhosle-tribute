@@ -416,6 +416,12 @@ body {
   fill: var(--gold);
 }
 
+/* Song counter (subtle, left side of controls) */
+.song-counter {
+  font-size: 0.65rem; letter-spacing: 0.2em; color: rgba(201,168,76,0.3);
+  font-family: 'Cormorant Garamond', serif;
+}
+
 /* ─── UNMUTE PROMPT ─── */
 .unmute-prompt {
   position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
@@ -493,15 +499,14 @@ body {
   <span>Click to unmute</span>
 </div>
 
-<!-- Hidden YouTube player -->
-<div class="yt-audio-players" id="ytPlayers"></div>
 
 <!-- Song progress -->
 <div class="song-progress"><div class="song-progress-fill" id="songProgressFill"></div></div>
 <div class="countdown" id="countdown">0:20</div>
 
-<!-- Controls (minimal — mute + credit bird) -->
+<!-- Controls (counter + mute + social icons) -->
 <div class="controls" id="controls">
+  <div class="song-counter" id="songCounter">1 / 10</div>
   <div class="ctrl-right">
     <button class="ctrl-btn ctrl-mute" id="btnMute" title="Mute (M)">
       <svg class="icon-sound" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
@@ -509,6 +514,9 @@ body {
     </button>
     <a class="credit" href="https://twitter.com/rajeshm101" target="_blank" rel="noopener" title="@rajeshm101">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23.643 4.937c-.835.37-1.732.62-2.675.733.962-.576 1.7-1.49 2.048-2.578-.9.534-1.897.922-2.958 1.13-.85-.904-2.06-1.47-3.4-1.47-2.572 0-4.658 2.086-4.658 4.66 0 .364.042.718.12 1.06-3.873-.195-7.304-2.05-9.602-4.868-.4.69-.63 1.49-.63 2.342 0 1.616.823 3.043 2.072 3.878-.764-.025-1.482-.234-2.11-.583v.06c0 2.257 1.605 4.14 3.737 4.568-.39.106-.803.162-1.227.162-.3 0-.593-.028-.877-.082.593 1.85 2.313 3.198 4.352 3.234-1.595 1.25-3.604 1.995-5.786 1.995-.376 0-.747-.022-1.112-.065 2.062 1.323 4.51 2.093 7.14 2.093 8.57 0 13.255-7.098 13.255-13.254 0-.2-.005-.402-.014-.602.91-.658 1.7-1.477 2.323-2.41z"/></svg>
+    </a>
+    <a class="credit" href="https://github.com/rajeshm101/asha-bhosle-tribute" target="_blank" rel="noopener" title="View source on GitHub">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
     </a>
   </div>
 </div>
@@ -523,70 +531,79 @@ body {
   <div class="tagline">Asha Bhosle &middot; Forever in Melody</div>
 </div>
 
-<!-- YouTube IFrame API -->
-<script src="https://www.youtube.com/iframe_api"></script>
 <script>
 // ─── SONG DATA (10 songs) ───
+// Thumbnails from YouTube, audio from Spotify 30-second previews (ad-free)
 const songs = [
   {
     title: 'Dum Maro Dum', film: 'Hare Rama Hare Krishna',
     era: '1971 \u00B7 The Iconic Rebel',
     desc: 'A smoky, hypnotic anthem that shattered convention and defined a restless generation.',
-    yt: 'GUn3P5QyLRY', start: 38
+    yt: 'GUn3P5QyLRY',
+    audio: 'https://p.scdn.co/mp3-preview/65b46bfdd6dc6b359d2234b6a2d821e86696a1ba'
   },
   {
     title: 'Aaiye Meherbaan', film: 'Howrah Bridge',
     era: '1958 \u00B7 Where It All Began',
     desc: 'The song that announced Asha to the world \u2014 sultry elegance that made Madhubala unforgettable.',
-    yt: 'go4ixEgnecg', start: 28
+    yt: 'go4ixEgnecg',
+    audio: 'https://p.scdn.co/mp3-preview/2611dfe3b09998270681bc73e16380d358989859'
   },
   {
     title: 'Chura Liya Hai Tumne', film: 'Yaadon Ki Baaraat',
     era: '1973 \u00B7 Romance Immortalized',
     desc: 'Pure, luminous romance \u2014 a melody so tender it seems to suspend time itself.',
-    yt: 'dkqU7aq82XQ', start: 55
+    yt: 'dkqU7aq82XQ',
+    audio: 'https://p.scdn.co/mp3-preview/848d5fa0e393cae43b7be3e413c80808705f3075'
   },
   {
     title: 'Piya Tu Ab To Aaja', film: 'Caravan',
     era: '1971 \u00B7 Cabaret Royalty',
     desc: 'Her voice drips with yearning and defiance \u2014 a masterclass no one has matched.',
-    yt: '46GGxF_Bwhg', start: 35
+    yt: '46GGxF_Bwhg',
+    audio: 'https://p.scdn.co/mp3-preview/acae444ed81058244e8299f48bec1c13cc03fd79'
   },
   {
     title: 'Raat Akeli Hai', film: 'Jewel Thief',
     era: '1967 \u00B7 Nocturnal Seduction',
     desc: 'Moonlit longing set to music. Every whispered note draws you deeper into the night.',
-    yt: 'Su4vvd2thG8', start: 42
+    yt: 'Su4vvd2thG8',
+    audio: 'https://p.scdn.co/mp3-preview/e784f012fa1d238dedce8b907d6085b1075360b8'
   },
   {
     title: 'Yeh Mera Dil', film: 'Don',
     era: '1978 \u00B7 Disco Inferno',
     desc: 'Helen dances, Asha ignites \u2014 the most electrifying voice-and-moves pairing in Bollywood history.',
-    yt: 'lUFitnpPihs', start: 28
+    yt: 'lUFitnpPihs',
+    audio: 'https://p.scdn.co/mp3-preview/698f1242d46d421a65f274943a9d2f198b3a71e8'
   },
   {
     title: 'In Ankhon Ki Masti', film: 'Umrao Jaan',
     era: '1981 \u00B7 Ghazal Perfection',
     desc: 'Every note carries the weight of unspoken longing \u2014 poetry transcending language.',
-    yt: 'yjYE41bYnUM', start: 68
+    yt: 'yjYE41bYnUM',
+    audio: 'https://p.scdn.co/mp3-preview/5192b5fa33600a265ba4aace9dcedc715a3335b9'
   },
   {
     title: 'O Mere Sona Re', film: 'Teesri Manzil',
     era: '1966 \u00B7 Joyous Abandon',
     desc: 'Asha and Rafi in perfect duet \u2014 the sound of unapologetic, breathless joy.',
-    yt: 'aMUWjtHLTAw', start: 32
+    yt: 'aMUWjtHLTAw',
+    audio: 'https://p.scdn.co/mp3-preview/9696b76fd0bfb01d822323b0ff5a3cad9e467be0'
   },
   {
     title: 'Mera Kuch Samaan', film: 'Ijaazat',
     era: '1987 \u00B7 Poetry in Song',
     desc: 'Gulzar\u2019s words, R.D. Burman\u2019s spare arrangement, Asha stripped bare. A farewell that still draws tears.',
-    yt: '6i9YxZKnQeY', start: 45
+    yt: '6i9YxZKnQeY',
+    audio: 'https://p.scdn.co/mp3-preview/9f27d69c5d562efef63807136437c1b5ca030242'
   },
   {
     title: 'Tanha Tanha', film: 'Rangeela',
     era: '1995 \u00B7 Rahman\u2019s Muse',
     desc: 'A.R. Rahman asked for something entirely new. Asha delivered a sound no one had ever heard from her before.',
-    yt: 'W1GNGlaFKYw', start: 38
+    yt: 'W1GNGlaFKYw',
+    audio: 'https://p.scdn.co/mp3-preview/fd22baf701670ee9eac5ac4f505a7c8d5c611ae1'
   },
 ];
 
@@ -641,88 +658,87 @@ songs.slice(0, 6).forEach((s, i) => {
   collageGrid.appendChild(cell);
 });
 
-// ─── YOUTUBE PLAYER ───
-let player = null;
-let playerReady = false;
+// ─── AUDIO PLAYER (HTML5 Audio with Spotify previews) ───
+let player = null; // HTML5 Audio element
 let isMuted = true; // start muted (autoplay policy)
 let isPaused = false;
 let currentIndex = 0;
 let songTimer = null;
 let songElapsed = 0;
 let progressInterval = null;
-
-function onYouTubeIframeAPIReady() {
-  window.ytAPIReady = true;
-  // Auto-start: create player immediately (muted for autoplay compliance)
-  initPlayer(0);
-}
+let fadeInterval = null;
 
 // Fade audio in over ~2.5 seconds
 function fadeInAudio(targetVol) {
   if (!player || isMuted) return;
-  player.setVolume(0);
-  player.unMute();
+  clearInterval(fadeInterval);
+  player.volume = 0;
+  player.muted = false;
   let vol = 0;
   const steps = 12;
   const stepTime = 2500 / steps;
   const increment = targetVol / steps;
-  const fadeIn = setInterval(() => {
+  fadeInterval = setInterval(() => {
     vol += increment;
     if (vol >= targetVol) {
       vol = targetVol;
-      clearInterval(fadeIn);
+      clearInterval(fadeInterval);
     }
-    try { player.setVolume(Math.round(vol)); } catch(e) {}
+    try { player.volume = Math.min(1, vol); } catch(e) {}
   }, stepTime);
 }
 
-function initPlayer(index) {
-  const s = songs[index];
-  const container = document.getElementById('ytPlayers');
-  container.innerHTML = '<div id="yt-single-player"></div>';
-  playerReady = false;
-
-  player = new YT.Player('yt-single-player', {
-    height: '1', width: '1',
-    videoId: s.yt,
-    playerVars: {
-      autoplay: 1, controls: 0, start: s.start,
-      playsinline: 1, disablekb: 1, fs: 0,
-      modestbranding: 1, rel: 0, origin: window.location.origin,
-    },
-    events: {
-      onReady: function(e) {
-        playerReady = true;
-        e.target.setVolume(0); // start silent
-        if (isMuted) { e.target.mute(); }
-        e.target.playVideo();
-        fadeInAudio(85); // fade in
-        currentIndex = index;
-        startSongTimer();
-      },
-      onError: function(e) {
-        console.log('[Tribute] Error:', e.data, '- skipping to next');
-        goNext();
-      }
+// Fade audio out, then call callback
+function fadeOutAudio(callback) {
+  if (!player) { if (callback) callback(); return; }
+  clearInterval(fadeInterval);
+  let vol = player.volume;
+  fadeInterval = setInterval(() => {
+    vol -= 0.08;
+    if (vol <= 0) {
+      vol = 0;
+      clearInterval(fadeInterval);
+      player.pause();
+      if (callback) callback();
     }
-  });
+    try { player.volume = Math.max(0, vol); } catch(e) {}
+  }, 100);
 }
 
-function switchSong(index) {
+function playSong(index) {
   if (index < 0 || index >= songs.length) return;
   const s = songs[index];
   currentIndex = index;
   clearSongTimer();
 
-  if (player && playerReady && player.loadVideoById) {
-    player.setVolume(0); // start silent
-    player.loadVideoById({ videoId: s.yt, startSeconds: s.start });
-    if (isMuted) { player.mute(); }
-    fadeInAudio(85); // fade in
-    startSongTimer();
-  } else {
-    initPlayer(index);
-  }
+  // Stop previous
+  if (player) { player.pause(); }
+
+  // Create new audio element
+  player = new Audio(s.audio);
+  player.crossOrigin = 'anonymous';
+  player.volume = 0;
+  player.muted = isMuted;
+
+  player.addEventListener('canplaythrough', function onReady() {
+    player.removeEventListener('canplaythrough', onReady);
+    player.play().then(() => {
+      fadeInAudio(0.85); // fade in (0-1 scale for HTML5 Audio)
+      startSongTimer();
+    }).catch(err => {
+      console.log('[Tribute] Playback blocked, starting muted');
+      player.muted = true;
+      player.play();
+      startSongTimer();
+    });
+  }, { once: true });
+
+  player.addEventListener('error', () => {
+    console.log('[Tribute] Audio error - skipping to next');
+    goNext();
+  });
+
+  player.load();
 }
 
 // ─── SONG TIMER (auto-advance after SONG_DURATION seconds) ───
@@ -777,36 +793,8 @@ function clearSongTimer() {
   progressInterval = null;
 }
 
-function pauseShow() {
-  isPaused = true;
-  clearSongTimer();
-  if (player && playerReady) player.pauseVideo();
-  songProgressFill.style.transition = 'none';
-  const pct = (songElapsed / SONG_DURATION) * 100;
-  songProgressFill.style.width = pct + '%';
-  btnPlay.classList.add('paused');
-}
-
-function resumeShow() {
-  isPaused = false;
-  if (player && playerReady) player.playVideo();
-  const remaining = SONG_DURATION - songElapsed;
-  songProgressFill.style.transition = `width ${remaining}s linear`;
-  songProgressFill.style.width = '100%';
-
-  songTimer = setTimeout(() => {
-    if (currentIndex < songs.length - 1) {
-      goNext();
-    } else {
-      showFinale();
-    }
-  }, remaining * 1000);
-
-  progressInterval = setInterval(() => {
-    songElapsed++;
-    updateCountdown();
-  }, 1000);
-  btnPlay.classList.remove('paused');
+function updateCounter(index) {
+  document.getElementById('songCounter').textContent = `${index + 1} / ${songs.length}`;
 }
 
 // ─── SLIDE DISPLAY ───
@@ -816,7 +804,7 @@ function showSlide(index) {
   document.querySelectorAll('.slide.active').forEach(s => s.classList.remove('active'));
   const el = document.getElementById('slide-' + index);
   if (el) el.classList.add('active');
-  // Update overall progress (fills fully after last song completes)
+  updateCounter(index);
   overallFill.style.width = ((index + 1) / songs.length * 100) + '%';
 }
 
@@ -825,14 +813,7 @@ function goNext() {
   if (currentIndex >= songs.length - 1) { showFinale(); return; }
   const next = currentIndex + 1;
   showSlide(next);
-  switchSong(next);
-}
-
-function goPrev() {
-  if (currentIndex <= 0) return;
-  const prev = currentIndex - 1;
-  showSlide(prev);
-  switchSong(prev);
+  playSong(next);
 }
 
 // ─── COLLAGE ───
@@ -849,14 +830,7 @@ function flashCollage(duration) {
 // ─── FINALE ───
 function showFinale() {
   clearSongTimer();
-  // Fade audio
-  if (player && playerReady) {
-    let vol = 85, fade = setInterval(() => {
-      vol -= 6;
-      if (vol <= 0) { clearInterval(fade); player.pauseVideo(); }
-      else { try { player.setVolume(vol); } catch(e){} }
-    }, 200);
-  }
+  fadeOutAudio();
   document.getElementById('finale').classList.add('show');
 }
 
@@ -877,8 +851,9 @@ const unmutePrompt = document.getElementById('unmutePrompt');
 btnMute.addEventListener('click', () => {
   isMuted = !isMuted;
   btnMute.classList.toggle('muted', isMuted);
-  if (player && playerReady) {
-    if (isMuted) { player.mute(); } else { player.unMute(); player.setVolume(85); }
+  if (player) {
+    player.muted = isMuted;
+    if (!isMuted) player.volume = 0.85;
   }
 });
 
@@ -886,7 +861,7 @@ btnMute.addEventListener('click', () => {
 unmutePrompt.addEventListener('click', () => {
   isMuted = false;
   btnMute.classList.remove('muted');
-  if (player && playerReady) { player.unMute(); player.setVolume(85); }
+  if (player) { player.muted = false; player.volume = 0.85; }
   unmutePrompt.classList.add('gone');
 });
 
@@ -897,7 +872,7 @@ function onFirstInteraction() {
   userInteracted = true;
   isMuted = false;
   btnMute.classList.remove('muted');
-  if (player && playerReady) { player.unMute(); player.setVolume(85); }
+  if (player) { player.muted = false; player.volume = 0.85; }
   unmutePrompt.classList.add('gone');
 }
 document.addEventListener('click', onFirstInteraction, { once: false });
@@ -913,6 +888,7 @@ document.addEventListener('keydown', (e) => {
 setTimeout(() => {
   document.getElementById('intro').classList.add('gone');
   showSlide(0);
+  playSong(0);
   controls.classList.add('visible');
   // Show unmute prompt after intro fades
   setTimeout(() => {

@@ -421,7 +421,7 @@ body {
 
 /* Song counter (subtle, left side of controls) */
 .song-counter {
-  font-size: 0.65rem; letter-spacing: 0.2em; color: rgba(201,168,76,0.3);
+  font-size: 0.8rem; letter-spacing: 0.2em; color: rgba(201,168,76,0.6);
   font-family: 'Cormorant Garamond', serif;
 }
 
@@ -576,7 +576,7 @@ const songs = [
     title: 'Raat Akeli Hai', film: 'Jewel Thief',
     era: '1967 \u00B7 Nocturnal Seduction',
     desc: 'Moonlit longing set to music. Every whispered note draws you deeper into the night.',
-    yt: 'Su4vvd2thG8', start: 42
+    yt: 'Su4vvd2thG8', start: 42, bgPos: '65% center'
   },
   {
     title: 'Yeh Mera Dil', film: 'Don',
@@ -606,7 +606,7 @@ const songs = [
     title: 'Tanha Tanha', film: 'Rangeela',
     era: '1995 \u00B7 Rahman\u2019s Muse',
     desc: 'A.R. Rahman asked for something entirely new. Asha delivered a sound no one had ever heard from her before.',
-    yt: 'W1GNGlaFKYw', start: 38
+    yt: 'W1GNGlaFKYw', start: 38, bgPos: '70% center'
   },
 ];
 
@@ -628,7 +628,7 @@ songs.forEach((s, i) => {
   slide.id = 'slide-' + i;
   const ytLink = `https://www.youtube.com/watch?v=${s.yt}`;
   slide.innerHTML = `
-    <div class="slide-img" style="background-image:url('${thumb(s.yt)}')"></div>
+    <div class="slide-img" style="background-image:url('${thumb(s.yt)}');${s.bgPos ? 'background-position:'+s.bgPos : ''}"></div>
     <div class="slide-overlay"></div>
     <div class="now-playing">
       <div class="now-playing-label">Now Playing</div>
@@ -716,7 +716,6 @@ function initPlayer(index) {
         if (isMuted) { e.target.mute(); }
         e.target.playVideo();
         fadeInAudio(85);
-        currentIndex = index;
         startSongTimer();
       },
       onError: function(e) {
@@ -839,6 +838,9 @@ function dismissCollage() {
 // ─── FINALE ───
 function showFinale() {
   clearSongTimer();
+  // Hide song progress bar and countdown on finale
+  document.querySelector('.song-progress').style.display = 'none';
+  countdownEl.classList.remove('visible');
   if (player && playerReady) {
     let vol = 85, fade = setInterval(() => {
       vol -= 6;
@@ -847,6 +849,11 @@ function showFinale() {
     }, 200);
   }
   document.getElementById('finale').classList.add('show');
+}
+
+function hideFinale() {
+  document.getElementById('finale').classList.remove('show');
+  document.querySelector('.song-progress').style.display = '';
 }
 
 // ─── CENTER MESSAGES (timed with song changes) ───
@@ -894,6 +901,14 @@ document.addEventListener('keydown', onFirstInteraction, { once: false });
 
 // Prev/Next buttons
 document.getElementById('btnPrev').addEventListener('click', () => {
+  // If finale is showing, go back to the last song
+  if (document.getElementById('finale').classList.contains('show')) {
+    hideFinale();
+    const last = songs.length - 1;
+    showSlide(last);
+    playSong(last);
+    return;
+  }
   if (currentIndex <= 0) return;
   const prev = currentIndex - 1;
   showSlide(prev);

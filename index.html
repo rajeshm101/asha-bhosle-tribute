@@ -576,7 +576,7 @@ const songs = [
     title: 'Raat Akeli Hai', film: 'Jewel Thief',
     era: '1967 \u00B7 Nocturnal Seduction',
     desc: 'Moonlit longing set to music. Every whispered note draws you deeper into the night.',
-    yt: 'Su4vvd2thG8', start: 42, bgPos: '65% center'
+    yt: 'Su4vvd2thG8', start: 42, bgPos: '55% center'
   },
   {
     title: 'Yeh Mera Dil', film: 'Don',
@@ -694,12 +694,15 @@ function fadeInAudio(targetVol) {
   }, stepTime);
 }
 
+let initGeneration = 0; // guards against stale onReady callbacks
+
 function initPlayer(index) {
   const s = songs[index];
   const container = document.getElementById('ytPlayers');
   if (!container) return;
   container.innerHTML = '<div id="yt-single-player"></div>';
   playerReady = false;
+  const gen = ++initGeneration;
 
   player = new YT.Player('yt-single-player', {
     height: '1', width: '1',
@@ -711,6 +714,7 @@ function initPlayer(index) {
     },
     events: {
       onReady: function(e) {
+        if (gen !== initGeneration) return; // stale — user already navigated away
         playerReady = true;
         e.target.setVolume(0);
         if (isMuted) { e.target.mute(); }
@@ -719,8 +723,13 @@ function initPlayer(index) {
         startSongTimer();
       },
       onError: function(e) {
-        console.log('[Tribute] Error:', e.data, '- skipping to next');
-        goNext();
+        if (gen !== initGeneration) return;
+        console.log('[Tribute] YT error:', e.data, 'on song', index);
+        // Only auto-advance if still on the same song that was init'd
+        if (currentIndex === index) {
+          // Error 150/101 = embedding restricted; skip song
+          if (e.data === 150 || e.data === 101) goNext();
+        }
       }
     }
   });
@@ -964,7 +973,7 @@ const tributeMessages = [
   {
     quote: '"I no longer just sing a tune.\nI feel the notes surging through my veins.\nIt\u2019s almost like I see the music."',
     attr: '\u2014 Asha Bhosle',
-    delay: 5000, duration: 9000
+    delay: 5000, duration: 14000
   },
   // Song 3: Piya Tu Ab To Aaja
   // Source: BrainyQuote / quote.org (quote.org/quote/music-has-given-me-great-solace-in-943825)

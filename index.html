@@ -508,7 +508,7 @@ body {
 
 <!-- Song progress -->
 <div class="song-progress"><div class="song-progress-fill" id="songProgressFill"></div></div>
-<div class="countdown" id="countdown">0:45</div>
+<div class="countdown" id="countdown">0:20</div>
 
 <!-- Controls -->
 <div class="controls" id="controls">
@@ -610,7 +610,7 @@ const songs = [
   },
 ];
 
-const SONG_DURATION = 45; // seconds per song
+const SONG_DURATION = 20; // seconds per song
 
 function thumb(ytId) {
   return `https://img.youtube.com/vi/${ytId}/maxresdefault.jpg`;
@@ -956,73 +956,65 @@ setTimeout(() => {
 // Free Press Journal, and ANI News tributes.
 const tributeMessages = [
   // Song 0: Dum Maro Dum
-  // Source: BrainyQuote (brainyquote.com/quotes/asha_bhosle_1019861)
   {
     quote: '"With singing, you get lost in the music \u2014\nI go into another world when I\u2019m singing."',
     attr: '\u2014 Asha Bhosle',
-    delay: 5000, duration: 9000
+    delay: 3000, duration: 12000
   },
-  // Song 1: Aaiye Meherbaan (factual narration, not a quote)
+  // Song 1: Aaiye Meherbaan
   {
     quote: 'She started learning classical music at three.\nPlayback singing at ten.\nBy twenty-five, a voice the nation knew by heart.',
     attr: '',
-    delay: 4000, duration: 9000
+    delay: 3000, duration: 12000
   },
   // Song 2: Chura Liya
-  // Source: Indian Express interview, 2023 (via rahulgaitonde.org)
   {
     quote: '"I no longer just sing a tune.\nI feel the notes surging through my veins.\nIt\u2019s almost like I see the music."',
     attr: '\u2014 Asha Bhosle',
-    delay: 5000, duration: 14000
+    delay: 3000, duration: 12000
   },
   // Song 3: Piya Tu Ab To Aaja
-  // Source: BrainyQuote / quote.org (quote.org/quote/music-has-given-me-great-solace-in-943825)
   {
     quote: '"Music has given me great solace\nin my times of hardship.\nI owe everything to music."',
     attr: '\u2014 Asha Bhosle',
-    delay: 5000, duration: 9000
+    delay: 3000, duration: 12000
   },
   // Song 4: Raat Akeli Hai
-  // Source: BrainyQuote (brainyquote.com/authors/asha-bhosle-quotes)
   {
     quote: '"I have sung in over 20 different languages\nand enjoyed it.\nI have even sung in Spanish and Russian."',
     attr: '\u2014 Asha Bhosle',
-    delay: 5000, duration: 9000
+    delay: 3000, duration: 12000
   },
   // Song 5: Yeh Mera Dil (+ collage)
-  // R.D. Burman composed his most daring melodies for Asha — factual narration
   {
     quote: 'R.D. Burman composed his most daring melodies\nbecause he knew Asha could sing them.\nTogether, they rewrote\nthe rules of film music.',
     attr: '',
-    delay: 4000, duration: 9000,
+    delay: 3000, duration: 12000,
     collage: true
   },
   // Song 6: In Ankhon Ki Masti
-  // Source: BrainyQuote (brainyquote.com/authors/asha-bhosle-quotes)
   {
     quote: '"There has been great tragedy\nbut also moments of great happiness.\nI\u2019ve taken both in my stride,\nand if I were to replay my life,\nI would do it all over again."',
     attr: '\u2014 Asha Bhosle',
-    delay: 4000, duration: 10000
+    delay: 3000, duration: 12000
   },
   // Song 7: O Mere Sona Re
-  // Source: BrainyQuote (verified Asha Bhosle quote)
   {
     quote: '"I have no regrets \u2014\nbut yes, I have been\ndeeply hurt many times.\nI prefer to find some way to solve it,\nand then move on."',
     attr: '\u2014 Asha Bhosle',
-    delay: 5000, duration: 9000
+    delay: 3000, duration: 12000
   },
   // Song 8: Mera Kuch Samaan
-  // Source: Free Press Journal / Daily Sun / MSN (Couple of Things podcast)
   {
     quote: '"My only wish now is to die\nwhile I\u2019m still singing.\nGaana meri life hai.\nI can\u2019t live without singing."',
     attr: '\u2014 Asha Bhosle',
-    delay: 4000, duration: 10000
+    delay: 3000, duration: 12000
   },
   // Song 9: Tanha Tanha (finale — factual closing tribute)
   {
     quote: '12,000 songs. 20 languages.\n8 decades of playback singing.\nOne extraordinary voice.\nForever.',
     attr: '',
-    delay: 4000, duration: 10000
+    delay: 3000, duration: 12000
   },
 ];
 

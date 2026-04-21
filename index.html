@@ -558,7 +558,7 @@ const songs = [
     title: 'Do Pal Ki Hai Yeh Zindagani', film: 'Chala Murari Hero Banne',
     era: '1977 \u00B7 Life in Two Moments',
     desc: 'A vivacious celebration of the fleeting now \u2014 Asha turns philosophy into pure, infectious joy.',
-    yt: '4VV-rF_Scrk', start: 15
+    yt: 'sKBgiz0jrZw', start: 15, thumbYt: '4VV-rF_Scrk'
   },
   {
     title: 'Chura Liya Hai Tumne', film: 'Yaadon Ki Baaraat',
@@ -626,9 +626,9 @@ songs.forEach((s, i) => {
   const slide = document.createElement('div');
   slide.className = 'slide';
   slide.id = 'slide-' + i;
-  const ytLink = `https://www.youtube.com/watch?v=${s.yt}`;
+  const ytLink = `https://www.youtube.com/watch?v=${s.thumbYt || s.yt}`;
   slide.innerHTML = `
-    <div class="slide-img" style="background-image:url('${thumb(s.yt)}');${s.bgPos ? 'background-position:'+s.bgPos : ''}"></div>
+    <div class="slide-img" style="background-image:url('${thumb(s.thumbYt || s.yt)}');${s.bgPos ? 'background-position:'+s.bgPos : ''}"></div>
     <div class="slide-overlay"></div>
     <div class="now-playing">
       <div class="now-playing-label">Now Playing</div>
@@ -654,7 +654,7 @@ songs.slice(0, 6).forEach((s, i) => {
   const cell = document.createElement('div');
   cell.className = 'collage-cell';
   cell.innerHTML = `
-    <div class="cell-bg" style="background-image:url('${thumb(s.yt)}')"></div>
+    <div class="cell-bg" style="background-image:url('${thumb(s.thumbYt || s.yt)}')"></div>
     <div class="cell-overlay"></div>
     <div class="cell-label"><h3>${s.title}</h3><span>${s.era}</span></div>
   `;

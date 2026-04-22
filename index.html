@@ -512,7 +512,7 @@ body {
 
 <!-- Controls -->
 <div class="controls" id="controls">
-  <div class="song-counter" id="songCounter">1 / 10</div>
+  <div class="song-counter" id="songCounter">1 / 9</div>
   <div class="ctrl-right">
     <button class="ctrl-btn ctrl-nav" id="btnPrev" title="Previous">
       <svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
@@ -553,12 +553,6 @@ const songs = [
     era: '1971 \u00B7 The Iconic Rebel',
     desc: 'A smoky, hypnotic anthem that shattered convention and defined a restless generation.',
     yt: 'GUn3P5QyLRY', start: 38
-  },
-  {
-    title: 'Duniya Mein Logon Ko', film: 'Apna Desh',
-    era: '1972 \u00B7 Smoky Seduction',
-    desc: 'Asha and R.D. Burman in a duet of sly, smoldering charm \u2014 Rajesh Khanna and Mumtaz at their finest.',
-    yt: 'r4K-ptmVHaA', start: 20
   },
   {
     title: 'Chura Liya Hai Tumne', film: 'Yaadon Ki Baaraat',
@@ -951,60 +945,54 @@ setTimeout(() => {
 const tributeMessages = [
   // Song 0: Dum Maro Dum
   {
-    quote: '"Music makes illness retreat."',
-    attr: '\u2014 Asha Bhosle',
-    delay: 1000, duration: 10000
-  },
-  // Song 1: Duniya Mein Logon Ko
-  {
     quote: '"If you are already happy,\nmusic heightens your joy."',
     attr: '\u2014 Asha Bhosle',
     delay: 1000, duration: 10000
   },
-  // Song 2: Chura Liya
+  // Song 1: Chura Liya
   {
     quote: '"I no longer just sing a tune.\nI feel the notes surging through my veins.\nIt\u2019s almost like I see the music."',
     attr: '\u2014 Asha Bhosle',
     delay: 1000, duration: 10000
   },
-  // Song 3: Piya Tu Ab To Aaja
+  // Song 2: Piya Tu Ab To Aaja
   {
     quote: '"I have always been rebellious,\nbut that is because I\u2019ve wanted\nto do different things,\ntry out new things."',
     attr: '\u2014 Asha Bhosle',
     delay: 1000, duration: 10000
   },
-  // Song 4: Raat Akeli Hai
+  // Song 3: Raat Akeli Hai
   {
     quote: '"Music has given me great solace\nin my times of hardship.\nIt has also brought me fame and wealth,\nand I owe everything to music."',
     attr: '\u2014 Asha Bhosle',
     delay: 1000, duration: 10000
   },
-  // Song 5: Yeh Mera Dil (+ collage)
+  // Song 4: Yeh Mera Dil (+ collage)
   {
     quote: 'R.D. Burman composed his most daring melodies\nbecause he knew Asha could sing them.\nTogether, they rewrote\nthe rules of film music.',
     attr: '',
     delay: 1000, duration: 10000,
     collage: true
   },
-  // Song 6: In Ankhon Ki Masti
+  // Song 5: In Ankhon Ki Masti
   {
     quote: '"I\u2019ve enjoyed my life.\nThere has been great tragedy\nbut also moments of great happiness.\nI\u2019ve taken both in my stride,\nand if I were to replay my life,\nI would do it all over again."',
     attr: '\u2014 Asha Bhosle',
     delay: 1000, duration: 10000
   },
-  // Song 7: O Mere Sona Re
+  // Song 6: O Mere Sona Re
   {
     quote: '"With singing, you get lost in the music \u2014\nI go into another world when I\u2019m singing."',
     attr: '\u2014 Asha Bhosle',
     delay: 1000, duration: 10000
   },
-  // Song 8: Mera Kuch Samaan
+  // Song 7: Mera Kuch Samaan
   {
     quote: '"My only wish now is to die\nwhile I\u2019m still singing.\nGaana meri life hai.\nI can\u2019t live without singing."',
     attr: '\u2014 Asha Bhosle',
     delay: 1000, duration: 10000
   },
-  // Song 9: Tanha Tanha (finale — factual closing tribute)
+  // Song 8: Tanha Tanha (finale — factual closing tribute)
   {
     quote: '12,000 songs. 20 languages.\n8 decades of playback singing.\nOne extraordinary voice.\nForever.',
     attr: '',
